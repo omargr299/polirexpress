@@ -33,7 +33,8 @@ def parar(e):
     move = False
     transportando = True
     wnd.default_cams()
-    
+
+
 def continuar(e):
     global move,transportando
     move = True

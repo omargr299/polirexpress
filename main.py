@@ -1,7 +1,7 @@
 # obtemos la luista de etiquetas que tenemos ejemplos
 
 #Inicializamos la camara
-import cv2
+from cv2 import waitKey,resize,cvtColor,INTER_AREA,COLOR_GRAY2BGR,putText,FONT_HERSHEY_SIMPLEX,LINE_AA
 
 #Cargamos el modelo
 from tensorflow.python.keras.models import load_model
@@ -87,15 +87,15 @@ while loop:
     
     #si se detecto una etiqueta iniciamos el proceso de prediccion
     if etiqueta is not None and move:
-        etiqueta = cv2.resize(etiqueta,(tam,tam),interpolation = cv2.INTER_AREA) #redimensionamos la imagen a 100x100
-        wnd.update_etiqueta(cv2.cvtColor(etiqueta, cv2.COLOR_GRAY2BGR))
+        etiqueta = resize(etiqueta,(tam,tam),interpolation = INTER_AREA) #redimensionamos la imagen a 100x100
+        wnd.update_etiqueta(cvtColor(etiqueta, COLOR_GRAY2BGR))
 
         new = constant(etiqueta,dtype='float32',shape=(1,tam,tam,1)) #convertimos a un tensor con la forma de entrada
         prediccion = model.predict(new) #realizamos la prediccion
 
         estacion = argmax(prediccion) #obtenemos el indice de la clase con mayor probabilidad
         wnd.set_etiqueta(estaciones[estacion])
-        cv2.putText(deteccion,estaciones[estacion],(20,20),cv2.FONT_HERSHEY_SIMPLEX,1,(0,0,255),1,cv2.LINE_AA)
+        putText(deteccion,estaciones[estacion],(20,20),FONT_HERSHEY_SIMPLEX,1,(0,0,255),1,LINE_AA)
         wnd.update_screen(deteccion) 
 
         move=False
@@ -112,5 +112,5 @@ while loop:
         t = Thread(target=rutine,args=(estacion,))
         t.start()
         
-    if cv2.waitKey(1) & 0xFF == ord('q'): #si se presiona la tecla q se sale del bucle
+    if waitKey(1) & 0xFF == ord('q'): #si se presiona la tecla q se sale del bucle
         break

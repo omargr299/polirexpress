@@ -6,7 +6,7 @@ from time import sleep
 cam = cv2.VideoCapture(2,cv2.CAP_DSHOW)
 
 count = 0
-estaciones = data.get_estaciones()
+estaciones = data.getEstaciones()
 carpeta = './ejemplos2/'
 for estacion in estaciones: 
     print(estacion)

@@ -40,8 +40,12 @@ class Brazo:
         self.incDown.write(80)
 
     def agachar(self):
-        self.incUp.write(95)
-        self.incDown.write(128)
+        self.incUp.write(98)
+        self.incDown.write(123)
+
+    def inclinar(self):
+        self.incUp.write(98)
+        self.incDown.write(100)
 
 
 class Controller:
@@ -58,9 +62,10 @@ class Controller:
         self.brazo.cerrar()
 
     def agarrarCaja(self):
-        self.soltar()
+        self.brazo.soltar()
         sleep(1)
         self.brazo.volver()
+        sleep(1)
         self.brazo.agachar()
         sleep(1)
         self.brazo.agarrar()
@@ -70,6 +75,8 @@ class Controller:
         self.brazo.levantar()
         sleep(1)
         self.brazo.mover(destino)
+        sleep(1)
+        self.brazo.inclinar()
         sleep(1)
         self.brazo.soltar()
         sleep(1)
@@ -82,17 +89,16 @@ board = pyfirmata.Arduino('COM7')  # Cambia el puerto según tu sistema
 
 
 if __name__ == '__main__':
-    brazo = Brazo()
-    banda = Banda()
-    banda.parar()
-    brazo.default()
+    controller = Controller()
+    controller.banda.parar()
+    controller.default()
     sleep(2)
-    brazo.agarrarCaja()
+    controller.agarrarCaja()
     sleep(2)
-    brazo.estacion(90)
-    brazo.default()
+    controller.estacion(90)
+    controller.default()
     sleep(2)
-    banda.mover()
+    controller.banda.mover()
 
 
     

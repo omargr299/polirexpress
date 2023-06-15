@@ -5,12 +5,14 @@ import tensorflow as tf
 model = tf.keras.models.load_model('modelo/modelo-1.h5')
 model.load_weights('modelo/pesos-1.h5')
 
-cam = cv2.VideoCapture(0,cv2.CAP_DSHOW)
+cam = cv2.VideoCapture(2,cv2.CAP_DSHOW)
 while True:
     etiqueta = None
     estacion=''
     rect, frame = cam.read()
+
     if rect:
+        frame = cv2.resize(frame,(300,300),interpolation = cv2.INTER_AREA)
         contornos,deteccion,etiqueta = dt.recorte(frame)
     
     cv2.imshow("cam",frame)

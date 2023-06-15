@@ -15,11 +15,14 @@ if path.exists('modelo/modelo-1.h5'): #Si existe el modelo
     print('Cargando modelo...')
     model = load_model('modelo/modelo-1.h5') #caragamos el modelo
     model.load_weights('modelo/pesos-1.h5') #cargamos los pesos
+    print("modelo cargado")
+    print("incializando modelo...")
     model.predict(constant(zeros(shape=(tam,tam,1)),dtype='float32',shape=(1,tam,tam,1)))
-
+    print("modelo inicializado")
+    
 import deteccion as dt
 from numpy import argmax
-from gui import GUI
+from GUI import App
 
 def exit(e):
         global loop
@@ -27,23 +30,25 @@ def exit(e):
         ct.exit()
 
 #creamos la ventana
-wnd = GUI("PoliExpress", exit=exit, resizable=True)
-def parar(e):
-    global move,transportando
+wnd = App("PoliExpress", finish=exit, resizable=True)
+def parar():
+    global move,transportando,controller
     move = False
     transportando = True
+    controller.banda.parar()
     wnd.default_cams()
 
-
-def continuar(e):
-    global move,transportando
+def continuar():
+    global move,transportando,controller
     move = True
     transportando = False
-wnd.parar.config(command=parar)
-#cam = cv2.VideoCapture(1,cv2.CAP_DSHOW)
+    controller.banda.mover()
+    
+wnd.botones.parar.config(command=parar)
+wnd.botones.continuar.config(command=continuar)
 
-from data import getEstaciones
-estaciones = getEstaciones()
+from base import getEstaciones
+estaciones = getEstaciones(wnd.conex.cursor() )
 
 loop = True
 
@@ -57,7 +62,7 @@ transportando = False
 def rutine(estacion):
     global move,transportando,controller
     controller.banda.parar()
-    controller.agarraCaja()
+    controller.agarrarCaja()
     space = 180//4
     print(estacion)
     controller.estacion((space*(int(estacion)+1))-5)
@@ -68,6 +73,7 @@ def rutine(estacion):
 
 
 from threading import Thread
+from base import insertar
 #bucle de deteccion
 while loop:
     estacion = ''
@@ -92,11 +98,15 @@ while loop:
 
         new = constant(etiqueta,dtype='float32',shape=(1,tam,tam,1)) #convertimos a un tensor con la forma de entrada
         prediccion = model.predict(new) #realizamos la prediccion
+        
 
         estacion = argmax(prediccion) #obtenemos el indice de la clase con mayor probabilidad
-        wnd.set_etiqueta(estaciones[estacion])
-        putText(deteccion,estaciones[estacion],(20,20),FONT_HERSHEY_SIMPLEX,1,(0,0,255),1,LINE_AA)
+        wnd.set_etiqueta(estaciones[estacion][0])
+        putText(deteccion,estaciones[estacion][0],(20,20),FONT_HERSHEY_SIMPLEX,1,(0,0,255),1,LINE_AA)
         wnd.update_screen(deteccion) 
+
+        insertar(wnd.conex.cursor(),estaciones[estacion][0])
+        wnd.tabla.update()
 
         move=False
         #cv2.putText(frame,clases[clase],(100,100),cv2.FONT_HERSHEY_SIMPLEX,5,(0,0,255),5,cv2.LINE_AA) #mostramos la clase en pantalla

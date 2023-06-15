@@ -4,7 +4,7 @@ from tensorflow import keras
 from keras.utils import to_categorical
 from cv2 import imshow, waitKey,imread,getRotationMatrix2D,warpAffine,cvtColor,COLOR_BGR2GRAY,resize
 from os import listdir
-from data import get_data,get_estaciones
+from data import get_data,getEstaciones
 from random import randint
 
 # funcion para generar datasets de imagenes con deformaciones
@@ -13,7 +13,7 @@ def generate():
     extension = '.png' # extension de las imagenes
     tam = get_data()["image"]
 
-    labels = get_estaciones()
+    labels = getEstaciones()
 
     imagenes=[]
     clases=[]
@@ -50,7 +50,7 @@ def generateReal():
 
     tam = 120
 
-    labels = get_estaciones()
+    labels = getEstaciones()
     num_etiq = len(labels)
     for estacion in listdir(carpeta):
 

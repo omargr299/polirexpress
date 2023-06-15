@@ -1,0 +1,5 @@
+NORMAL_FONT = ('Roboto', 13)
+TITLE_FONT = ('Roboto', 13,'italic')
+TYPE_FONT = ('Roboto', 13, 'bold')
+LOGO_FONT = ("Eras Bolt ITC" ,33)
+ENTRY_FONT = ("Verdana" ,13)

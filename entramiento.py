@@ -5,8 +5,8 @@ from data import get_data
 import tensorflow as tf
 from os import path,mkdir
 
-model_name = 'modelo/modelo-1-1.h5'
-pesos_name = 'modelo/pesos-1-1.h5'
+model_name = 'modelo/modelo-1.h5'
+pesos_name = 'modelo/pesos-1.h5'
 # cremaos nuestro modelo
 if path.exists(model_name): # si el modelo existe caragamos el modelo y sus pesos
     print('Cargando modelo...')
@@ -20,7 +20,7 @@ else: # de lo contrario lo creamos
     tam = get_data()["image"]
 
     # agregamos las capas
-    modelo.add(tf.keras.layers.Convolution2D(10,(2,2),activation='relu', input_shape=(tam,tam,1))) # capa de convolucion
+    modelo.add(tf.keras.layers.Convolution2D(10,(3,3),activation='relu', input_shape=(tam,tam,1))) # capa de convolucion
     modelo.add(tf.keras.layers.MaxPool2D((2,2))) # capa de maxpooling
     modelo.add(tf.keras.layers.Convolution2D(5,(20,20),activation='relu', input_shape=(tam,tam,1))) # capa de convolucion
 
@@ -31,7 +31,7 @@ else: # de lo contrario lo creamos
 
 # compilamos el modelo
 modelo.compile(loss='categorical_crossentropy', # funcion de perdida
-                optimizer=tf.keras.optimizers.Adam(0.0000005), # optimizador
+                optimizer=tf.keras.optimizers.Adam(0.000001), # optimizador
                 metrics=['accuracy', 'Precision']) # metricas de medicion
 print("modelo creado")
     
